@@ -3,7 +3,7 @@
 
 void start(){
   factoryMethod::init ("B");
-  factory::init ("T2");
+  factory::init ("T1");
 }
 
 int main()
