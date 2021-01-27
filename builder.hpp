@@ -1,7 +1,16 @@
-#pragma once
 
+//Строитель — это порождающий паттерн проектирования, который позволяет создавать сложные объекты пошагово.
+//Строитель даёт возможность использовать один и тот же код строительства для получения разных представлений объектов
+//Класс строителя позволяет создать объекты различной конфигурации, для этого в классе создаются методы строительства конкретных объектов.
+//Если характеристики отличаются, то создаются конкретные строители.
+//Например, задача состоит в написании класса для строительства дома. Дома бывают разные и для того, чтобы не плодить конструкторы и классы
+//наследники, создается один класс строитель дома, в котором находятся поля и методы для всех вариантов домов. КОгда же необходимо создать конкретный
+//дом, то вызываются необходимые поля и методы для строительства дома. Для упрощения строительства заводят класс директо, который конфигурирует строительство под нужды,
+//т.е. пользователь директору указывает какой дом нужен, а директор вызывает необходимые методы у строителя, предоставляет интерфейс для работы с создаваемым объектом.
+
+#pragma once
 #include <iostream>
-#include <string>
+#include <memory>
 using std::cout;
 using std::endl;
 namespace builder {
@@ -17,19 +26,48 @@ struct ProductOne{
     ProductOne();
 };
 
-ProductOne::ProductOne(){
-    cout<<"ProductOne Created"<<endl;
-}
+
 struct ConcreteBuilderOne:Builder{
     void buildStepA() override;
     void buildStepB() override;
     void buildStepC() override;
-    ProductOne* createProduct();
+    std::unique_ptr<ProductOne> createProduct();
+    //    ProductOne* createProduct();
     ~ConcreteBuilderOne() override;
 private:
-    ProductOne* product;
+    std::unique_ptr<ProductOne> product;
 };
 
+struct ProductTwo{
+    ProductTwo();
+};
+struct ConcreteBuilderTwo:Builder{
+    void buildStepA() override;
+    void buildStepB() override;
+    void buildStepC() override;
+    std::unique_ptr<ProductTwo> createProduct();
+    ~ConcreteBuilderTwo() override;
+private:
+    std::unique_ptr<ProductTwo> product;
+};
+
+//Director
+struct Director{
+    Director();
+    Director(std::unique_ptr<Builder> _builder);
+    void changeBuilde(std::unique_ptr<Builder> _builder);
+    void buildProduct(std::string type);
+    ~Director();
+private:
+    std::unique_ptr<Builder> builder;
+};
+
+
+Director::~Director(){}
+
+//defines
+
+Builder::~Builder(){}
 
 void ConcreteBuilderOne::buildStepA(){
     cout<<"ConcreteBuilderOne::buildStepA"<<endl;
@@ -42,28 +80,10 @@ void ConcreteBuilderOne::buildStepC(){
     product = createProduct();
     cout<<"ConcreteBuilderOne::buildStepC"<<endl;
 }
-ProductOne* ConcreteBuilderOne::createProduct(){
-    return new ProductOne;
+std::unique_ptr<ProductOne> ConcreteBuilderOne::createProduct(){
+    return std::make_unique<ProductOne>();
 }
-
-ConcreteBuilderOne::~ConcreteBuilderOne(){delete product;}
-struct ProductTwo{
-    ProductTwo();
-};
-
-ProductTwo::ProductTwo(){
-    cout<<"ProductOne Created"<<endl;
-}
-struct ConcreteBuilderTwo:Builder{
-    void buildStepA() override;
-    void buildStepB() override;
-    void buildStepC() override;
-    ProductTwo* createProduct();
-    ~ConcreteBuilderTwo() override;
-private:
-    ProductTwo* product;
-};
-
+ConcreteBuilderOne::~ConcreteBuilderOne(){}
 
 void ConcreteBuilderTwo::buildStepA(){
     cout<<"ConcreteBuilderTwo::buildStepA"<<endl;
@@ -76,27 +96,15 @@ void ConcreteBuilderTwo::buildStepC(){
     product = createProduct();
     cout<<"ConcreteBuilderTwo::buildStepC"<<endl;
 }
-ProductTwo* ConcreteBuilderTwo::createProduct(){
-    return new ProductTwo();
+std::unique_ptr<ProductTwo> ConcreteBuilderTwo::createProduct(){
+    return std::make_unique< ProductTwo>();
 }
+ConcreteBuilderTwo::~ConcreteBuilderTwo(){}
 
-ConcreteBuilderTwo::~ConcreteBuilderTwo(){ delete product;}
-
-//Director
-struct Director{
-    Director();
-    Director(Builder* _builder);
-    void changeBuilde(Builder* _builder);
-    void buildProduct(std::string type);
-    ~Director();
-private:
-    Builder* builder;
-};
 Director::Director(){}
-Director::Director(Builder* _builder):builder(_builder){}
-void Director::changeBuilde(Builder *_builder){
-    delete  builder;
-    builder = _builder;
+Director::Director(std::unique_ptr<Builder> _builder):builder(std::move(_builder)){}
+void Director::changeBuilde(std::unique_ptr<Builder> _builder){
+    builder = std::move(_builder);
 }
 
 void Director::buildProduct(std::string type){
@@ -108,24 +116,23 @@ void Director::buildProduct(std::string type){
     }
 }
 
-Director::~Director(){delete builder;}
 
-//defines
-//defines builder class
-Builder::~Builder(){}
+ProductOne::ProductOne(){
+    cout<<"ProductOne Created"<<endl;
+}
 
-
+ProductTwo::ProductTwo(){
+    cout<<"ProductOne Created"<<endl;
+}
 //init
 void init(std::string typeBuilder , std::string typeProd){
-    Builder* builder = nullptr;
+    std::unique_ptr<Builder> builder;
     if(typeBuilder == "One")
-        builder = new ConcreteBuilderOne();
+        builder = std::make_unique <ConcreteBuilderOne>();
     else
-        builder = new ConcreteBuilderTwo();
-
-    Director* director = new Director(builder);
+        builder = std::make_unique<ConcreteBuilderTwo>();
+    auto director = std::make_unique<Director>(std::move(builder));
     director->buildProduct(typeProd);
-    delete director;
-    delete builder;
+
 }
 }
