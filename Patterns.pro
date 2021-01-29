@@ -9,4 +9,5 @@ SOURCES += \
 HEADERS += \
     builder.hpp \
     factory.hpp \
-    factoryMethod.hpp
+    factoryMethod.hpp \
+    prototype.hpp
