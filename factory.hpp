@@ -20,138 +20,139 @@
 #include <iostream>
 #include <memory>
 namespace factory {
-  //INTERFACES
-  //Product interfaces
-  struct ProductA{
+//INTERFACES
+//Product interfaces
+struct ProductA{
     virtual void doStaffA() = 0;
     virtual ~ProductA();
-  };
+};
 
-  struct ConcreteProductA1: ProductA{
+struct ConcreteProductA1: ProductA{
     void doStaffA() override;
     ~ConcreteProductA1() override;
-  };
+};
 
-  struct ConcreteProductA2: ProductA{
+struct ConcreteProductA2: ProductA{
     void doStaffA() override;
     ~ConcreteProductA2() override;
-  };
+};
 
 
-  struct ProductB{
+struct ProductB{
     virtual void doStaffB() = 0;
     virtual ~ProductB();
-  };
+};
 
-  struct ConcreteProductB1: ProductB{
+struct ConcreteProductB1: ProductB{
     void doStaffB() override;
     ~ConcreteProductB1() override;
-  };
+};
 
-  struct ConcreteProductB2: ProductB{
+struct ConcreteProductB2: ProductB{
     void doStaffB() override;
     ~ConcreteProductB2() override;
-  };
+};
 
-  //Factory interfaces
-  struct AbstractFactory{
+//Factory interfaces
+struct AbstractFactory{
     virtual std::unique_ptr<ProductA> createProductA() = 0;
     virtual std::unique_ptr<ProductB> createProductB() = 0;
     virtual ~AbstractFactory();
-  };
+};
 
-  struct AbstractFactory1:AbstractFactory{
+struct AbstractFactory1:AbstractFactory{
     virtual std::unique_ptr<ProductA> createProductA() override;
     virtual std::unique_ptr<ProductB> createProductB() override;
     ~AbstractFactory1() override;
-  };
+};
 
-  struct AbstractFactory2:AbstractFactory{
+struct AbstractFactory2:AbstractFactory{
     virtual std::unique_ptr<ProductA> createProductA() override;
     virtual std::unique_ptr<ProductB> createProductB() override;
     ~AbstractFactory2() override;
-  };
+};
 
 struct Client{
-  Client(std::unique_ptr<AbstractFactory> f);
-  void doStuff();
+    Client(std::unique_ptr<AbstractFactory> f);
+    void doStuff();
 private:
-  std::unique_ptr<AbstractFactory> factory ;
-  std::unique_ptr< ProductA> prA ;
-  std::unique_ptr< ProductB>prB ;
+    std::unique_ptr<AbstractFactory> factory ;
+    std::unique_ptr< ProductA> prA ;
+    std::unique_ptr< ProductB>prB ;
 
 };
 
-  //DEFINITIONS
-  //Products definition
-  ProductA::~ProductA (){}
+//DEFINITIONS
+//Products definition
+ProductA::~ProductA (){}
 
-  void ConcreteProductA1::doStaffA(){
+void ConcreteProductA1::doStaffA(){
     std::cout<<"Concrete Product A1"<<std::endl;
-  }
-  ConcreteProductA1::~ConcreteProductA1 (){}
+}
+ConcreteProductA1::~ConcreteProductA1 (){}
 
-  void ConcreteProductA2::doStaffA(){
+void ConcreteProductA2::doStaffA(){
     std::cout<<"Concrete Product A2"<<std::endl;
-  }
-  ConcreteProductA2::~ConcreteProductA2 (){}
+}
+ConcreteProductA2::~ConcreteProductA2 (){}
 
-  ProductB::~ProductB (){}
+ProductB::~ProductB (){}
 
-  void ConcreteProductB1::doStaffB(){
+void ConcreteProductB1::doStaffB(){
     std::cout<<"Concrete Product B1"<<std::endl;
-  }
-  ConcreteProductB1::~ConcreteProductB1 (){}
+}
+ConcreteProductB1::~ConcreteProductB1 (){}
 
-  void ConcreteProductB2::doStaffB(){
+void ConcreteProductB2::doStaffB(){
     std::cout<<"Concrete Product B2"<<std::endl;
-  }
-  ConcreteProductB2::~ConcreteProductB2 (){}
+}
+ConcreteProductB2::~ConcreteProductB2 (){}
 
-  //Factory def
-  AbstractFactory::~AbstractFactory (){}
+//Factory def
+AbstractFactory::~AbstractFactory (){}
 
-  std::unique_ptr<ProductA> AbstractFactory1::createProductA(){
+std::unique_ptr<ProductA> AbstractFactory1::createProductA(){
     return std::make_unique<ConcreteProductA1>();
-  }
-  std::unique_ptr<ProductB> AbstractFactory1::createProductB(){
+}
+std::unique_ptr<ProductB> AbstractFactory1::createProductB(){
     return std::make_unique<ConcreteProductB1>();
-  }
-  AbstractFactory1::~AbstractFactory1 (){}
+}
+AbstractFactory1::~AbstractFactory1 (){}
 
-  std::unique_ptr<ProductA> AbstractFactory2::createProductA(){
+std::unique_ptr<ProductA> AbstractFactory2::createProductA(){
     return std::make_unique<ConcreteProductA2>();
-  }
-  std::unique_ptr<ProductB> AbstractFactory2::createProductB(){
+}
+std::unique_ptr<ProductB> AbstractFactory2::createProductB(){
     return std::make_unique<ConcreteProductB2>();
-  }
-  AbstractFactory2::~AbstractFactory2 (){}
+}
+AbstractFactory2::~AbstractFactory2 (){}
 
 //Client def
 
-  Client::Client(std::unique_ptr<AbstractFactory> f):factory(std::move(f)) {  }
+Client::Client(std::unique_ptr<AbstractFactory> f):factory(std::move(f)) {  }
 
-  void Client::doStuff(){
+void Client::doStuff(){
     prA = factory->createProductA ();
     prB = factory->createProductB ();
 
     prA->doStaffA ();
     prB->doStaffB ();
 
-  }
+}
 
 //INIT
 
-  void init(std::string type){
+void init(std::string type){
+    std::cout<<"FACTORY PATTERN"<<std::endl;
     std::unique_ptr<Client> client ;
     if(type == "T1")
-      client = std::make_unique<Client>(std::make_unique<AbstractFactory1>());
+        client = std::make_unique<Client>(std::make_unique<AbstractFactory1>());
     if(type == "T2")
-      client = std::make_unique<Client>(std::make_unique<AbstractFactory2>());
+        client = std::make_unique<Client>(std::make_unique<AbstractFactory2>());
 
     client->doStuff ();
 
-  }
+}
 }
 
 

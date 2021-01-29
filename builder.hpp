@@ -63,7 +63,6 @@ private:
 };
 
 
-Director::~Director(){}
 
 //defines
 
@@ -101,11 +100,13 @@ std::unique_ptr<ProductTwo> ConcreteBuilderTwo::createProduct(){
 }
 ConcreteBuilderTwo::~ConcreteBuilderTwo(){}
 
+
 Director::Director(){}
 Director::Director(std::unique_ptr<Builder> _builder):builder(std::move(_builder)){}
 void Director::changeBuilde(std::unique_ptr<Builder> _builder){
     builder = std::move(_builder);
 }
+Director::~Director(){}
 
 void Director::buildProduct(std::string type){
     if(type == "A")
@@ -126,6 +127,7 @@ ProductTwo::ProductTwo(){
 }
 //init
 void init(std::string typeBuilder , std::string typeProd){
+    cout<<"BUILDER PATTERN"<<endl;
     std::unique_ptr<Builder> builder;
     if(typeBuilder == "One")
         builder = std::make_unique <ConcreteBuilderOne>();

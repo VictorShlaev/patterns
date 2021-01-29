@@ -10,4 +10,5 @@ HEADERS += \
     builder.hpp \
     factory.hpp \
     factoryMethod.hpp \
-    prototype.hpp
+    prototype.hpp \
+    singleton.hpp

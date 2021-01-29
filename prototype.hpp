@@ -97,6 +97,7 @@ inline ConcretePrototypeB::~ConcretePrototypeB(){}
 
 //init fun
 void init(){
+    std::cout<<"PROTOTYPE PATTERN"<<std::endl;
     vector<unique_ptr<Prototype>> elements;//вектор элементов продукции
     auto protA = make_unique<ConcretePrototypeA>();//объект конкретного продукта
     //заполнение полей

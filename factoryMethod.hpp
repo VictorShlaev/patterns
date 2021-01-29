@@ -80,7 +80,7 @@ namespace factoryMethod{
   ConcreteCreatorB::~ConcreteCreatorB (){}
      //INIT FUN
       void init(std::string type){
-
+          std::cout<<"FACTORY METHOD PATTERN"<<std::endl;
         std::unique_ptr<Creator> creator;
         if(type == "A")
           creator  =  std::make_unique<ConcreteCreatorA>();
