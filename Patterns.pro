@@ -8,6 +8,7 @@ SOURCES += \
 
 HEADERS += \
     adapter.hpp \
+    bridge.hpp \
     builder.hpp \
     factory.hpp \
     factoryMethod.hpp \
