@@ -7,6 +7,7 @@ SOURCES += \
         main.cpp
 
 HEADERS += \
+    adapter.hpp \
     builder.hpp \
     factory.hpp \
     factoryMethod.hpp \
