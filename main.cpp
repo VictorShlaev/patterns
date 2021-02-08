@@ -4,6 +4,7 @@
 #include "prototype.hpp"
 #include "singleton.hpp"
 #include "adapter.hpp"
+#include "bridge.hpp"
 void start(){
   factoryMethod::init ("B");
   factory::init ("T1");
@@ -11,6 +12,7 @@ void start(){
   prototype::init();
   singleton::init();
   adapter::init();
+  bridge::init("aB", "iA");
 }
 
 int main()
