@@ -5,6 +5,8 @@
 #include "singleton.hpp"
 #include "adapter.hpp"
 #include "bridge.hpp"
+#include "composite.hpp"
+#include "wrapper.hpp"
 void start(){
   factoryMethod::init ("B");
   factory::init ("T1");
@@ -13,6 +15,8 @@ void start(){
   singleton::init();
   adapter::init();
   bridge::init("aB", "iA");
+  composite::init();
+  wrapper::init("A");
 }
 
 int main()
